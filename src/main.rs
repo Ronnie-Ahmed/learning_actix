@@ -1,0 +1,41 @@
+use actix_web::{get,post,web,App,HttpResponse,HttpServer,Responder};
+
+#[get("/")]
+async fn hello(req_body:String)->impl Responder{
+    HttpResponse::Ok().body("Hello World!")
+}
+
+#[get("/name")]
+async fn my_name(req_body:String)->impl Responder{
+    HttpResponse::Ok().body("MY name is ROnnie")
+}
+
+#[post("/echo")]
+async fn echo(req_body:String)->impl Responder{
+    HttpResponse::Ok().body(req_body)
+}
+
+async fn manual_hello()->impl Responder{
+    HttpResponse::Ok().body("Hey There...")
+}
+
+async fn manual_name()->impl Responder{
+    HttpResponse::Ok().body("MY name is Ronnie")
+}
+
+
+
+
+#[actix_web::main]
+async fn main()->std::io::Result<()>{
+    HttpServer::new(|| {
+        App::new()
+        .service(hello)
+        .service(my_name)
+        .service(echo)
+        .route("/hey", web::get().to(manual_hello))
+        .route("/manual_name", web::get().to(manual_name))
+    }).bind(("127.0.0.1",8080))?
+    .run().await
+
+}
